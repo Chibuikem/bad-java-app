@@ -17,6 +17,7 @@
  */
 package org.owasp.benchmark.testcode;
 
+import org.apache.commons.io.FilenameUtils;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -65,8 +66,10 @@ public class BenchmarkTest00001 extends HttpServlet {
 
         String fileName = null;
         java.io.FileInputStream fis = null;
-
+        
         try {
+            // Sanitize the param to prevent directory traversal
+            param = FilenameUtils.getName(param);
             fileName = org.owasp.benchmark.helpers.Utils.TESTFILES_DIR + param;
             fis = new java.io.FileInputStream(new java.io.File(fileName));
             byte[] b = new byte[1000];
@@ -91,15 +94,15 @@ public class BenchmarkTest00001 extends HttpServlet {
                                             .ESAPI
                                             .encoder()
                                             .encodeForHTML(e.getMessage()));
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                    fis = null;
-                } catch (Exception e) {
-                    // we tried...
-                }
-            }
+        // } finally {
+        //     if (fis != null) {
+        //         try {
+        //             fis.close();
+        //             fis = null;
+        //         } catch (Exception e) {
+        //             // we tried...
+        //         }
+        //     }
         }
     }
 }
